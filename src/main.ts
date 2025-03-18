@@ -23,18 +23,18 @@ form.addEventListener('submit', async e => {
     response = await getLocation(locationName);
     location = response.results?.[0] ?? null;
 
-    if (location) {
-      weather = await getCurrentWeather(location);
-      displayLocation(location);
-    }
+    if (!location) return console.warn('Location not found: ', location);
 
-    if (weather) {
-      displayWeather(weather);
-      updateBackground(
-        weather.current_weather.weathercode,
-        weather.current_weather.is_day
-      );
-    }
+    weather = await getCurrentWeather(location!);
+    displayLocation(location!);
+
+    if (!weather) return console.warn('Weather not found: ', weather);
+
+    displayWeather(weather);
+    updateBackground(
+      weather.current_weather.weathercode,
+      weather.current_weather.is_day
+    );
   } catch (error) {
     console.error('Error in fetching from weather API: ', error);
   }

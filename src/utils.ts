@@ -20,7 +20,7 @@ export function getCurrentWeather(
   return axios.get(url).then(response => response.data);
 }
 
-export function displayLocation(locationDetails: Location) {
+export function displayLocation(locationDetails: Location): void {
   const displayLocationName = document.querySelector(
     '#location-name'
   ) as HTMLHeadingElement;
@@ -35,7 +35,7 @@ export function displayLocation(locationDetails: Location) {
   return;
 }
 
-export function displayWeather(weatherDetails: WeatherResponse) {
+export function displayWeather(weatherDetails: WeatherResponse): void {
   //   display temperature
   const displayTemperature = document.querySelector(
     '#temperature'
@@ -62,6 +62,50 @@ export function displayWeather(weatherDetails: WeatherResponse) {
   const winddirection = weatherDetails.current_weather.winddirection;
   const winddirectionUnits = weatherDetails.current_weather_units.winddirection;
   displayWindDirection.innerText = `Wind Direction: ${winddirection} ${winddirectionUnits}`;
+
+  return;
+}
+
+export function updateBackground(weatherCode: number, isDay: number): void {
+  let weatherClass: string = '';
+
+  switch (weatherCode) {
+    case 0:
+    case 1:
+      if (isDay) weatherClass = 'sunny';
+      if (!isDay) weatherClass = 'sunny-night';
+      break;
+    case 2:
+      if (isDay) weatherClass = 'partly-cloudy';
+      if (!isDay) weatherClass = 'partly-cloudy-night';
+      break;
+    case 3:
+      weatherClass = 'cloudy';
+      break;
+    case 4:
+      weatherClass = 'foggy';
+      break;
+    case 5:
+      weatherClass = 'drizzle';
+      break;
+    case 6:
+      weatherClass = 'rain';
+      break;
+    case 7:
+      weatherClass = 'snow';
+      break;
+    case 8:
+      weatherClass = 'showers';
+      break;
+    case 9:
+      weatherClass = 'thunderstorm';
+      break;
+    default:
+      console.warn('Unknown weather code: ', weatherCode);
+      break;
+  }
+
+  document.body.className = weatherClass;
 
   return;
 }

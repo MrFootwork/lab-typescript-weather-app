@@ -61,7 +61,28 @@ export function displayWeather(weatherDetails: WeatherResponse): void {
 
   const winddirection = weatherDetails.current_weather.winddirection;
   const winddirectionUnits = weatherDetails.current_weather_units.winddirection;
-  displayWindDirection.innerText = `Wind Direction: ${winddirection} ${winddirectionUnits}`;
+  displayWindDirection.innerHTML = /*html*/ `
+      Wind Direction: ${winddirection} ${winddirectionUnits}
+      <span id="arrow-container"></span>
+    `;
+
+  fetch('../public/images/arrow.svg')
+    .then(response => response.text())
+    .then(svgText => {
+      const container = document.getElementById('arrow-container');
+
+      if (!container) return;
+
+      container.innerHTML = svgText;
+      const svg = container.querySelector('svg');
+
+      if (!svg) return;
+
+      svg.style.width = '25px';
+      svg.style.height = '25px';
+      svg.style.transform = `rotate(${winddirection}deg)`;
+      svg.style.transformOrigin = '50% 70%';
+    });
 
   return;
 }

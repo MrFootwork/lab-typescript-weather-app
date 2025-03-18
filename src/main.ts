@@ -25,8 +25,8 @@ form.addEventListener('submit', async e => {
 
     if (!location) return console.warn('Location not found: ', location);
 
-    weather = await getCurrentWeather(location!);
-    displayLocation(location!);
+    weather = await getCurrentWeather(location);
+    displayLocation(location);
 
     if (!weather) return console.warn('Weather not found: ', weather);
 

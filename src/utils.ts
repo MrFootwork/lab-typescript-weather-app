@@ -21,68 +21,64 @@ export function getCurrentWeather(
 }
 
 export function displayLocation(locationDetails: Location): void {
-  const displayLocationName = document.querySelector(
-    '#location-name'
-  ) as HTMLHeadingElement;
+  const displayLocationName = document.getElementById('location-name');
+  const displayCountry = document.getElementById('country');
 
-  const displayCountry = document.querySelector(
-    '#country'
-  ) as HTMLHeadingElement;
+  if (!displayLocationName || !displayCountry) return;
 
-  displayLocationName.textContent = locationDetails?.name as string;
-  displayCountry.textContent = locationDetails?.country as string;
+  displayLocationName.textContent = locationDetails.name;
+  displayCountry.textContent = locationDetails.country;
 
   return;
 }
 
 export function displayWeather(weatherDetails: WeatherResponse): void {
   //   display temperature
-  const displayTemperature = document.querySelector(
-    '#temperature'
-  ) as HTMLParagraphElement;
+  const displayTemperature = document.getElementById('temperature');
 
-  const temperature = weatherDetails.current_weather.temperature;
-  const temperatureUnits = weatherDetails.current_weather_units.temperature;
-  displayTemperature.textContent = `Temperature: ${temperature} ${temperatureUnits}`;
+  if (displayTemperature) {
+    const temperature = weatherDetails.current_weather.temperature;
+    const temperatureUnits = weatherDetails.current_weather_units.temperature;
+    displayTemperature.textContent = `Temperature: ${temperature} ${temperatureUnits}`;
+  }
 
   // display windspeed
-  const displayWindSpeed = document.querySelector(
-    '#windspeed'
-  ) as HTMLParagraphElement;
+  const displayWindSpeed = document.getElementById('windspeed');
 
-  const windspeed = weatherDetails.current_weather.temperature;
-  const windspeedUnits = weatherDetails.current_weather_units.temperature;
-  displayWindSpeed.textContent = `Wind Speed: ${windspeed} ${windspeedUnits}`;
+  if (displayWindSpeed) {
+    const windspeed = weatherDetails.current_weather.temperature;
+    const windspeedUnits = weatherDetails.current_weather_units.temperature;
+    displayWindSpeed.textContent = `Wind Speed: ${windspeed} ${windspeedUnits}`;
+  }
 
   // display wind direction
-  const displayWindDirection = document.querySelector(
-    '#winddirection'
-  ) as HTMLParagraphElement;
+  const displayWindDirection = document.getElementById('winddirection');
 
-  const winddirection = weatherDetails.current_weather.winddirection;
-  const winddirectionUnits = weatherDetails.current_weather_units.winddirection;
-  displayWindDirection.innerHTML = /*html*/ `
+  if (displayWindDirection) {
+    const winddirection = weatherDetails.current_weather.winddirection;
+    const winddirectionUnits =
+      weatherDetails.current_weather_units.winddirection;
+    displayWindDirection.innerHTML = /*html*/ `
       Wind Direction: ${winddirection} ${winddirectionUnits}
       <span id="arrow-container"></span>
     `;
 
-  fetch('../public/images/arrow.svg')
-    .then(response => response.text())
-    .then(svgText => {
-      const container = document.getElementById('arrow-container');
+    const container = document.getElementById('arrow-container');
+    if (!container) return;
 
-      if (!container) return;
+    fetch('/images/arrow.svg')
+      .then(response => response.text())
+      .then(svgText => {
+        container.innerHTML = svgText;
+        const svg = container.querySelector('svg');
+        if (!svg) return;
 
-      container.innerHTML = svgText;
-      const svg = container.querySelector('svg');
-
-      if (!svg) return;
-
-      svg.style.width = '25px';
-      svg.style.height = '25px';
-      svg.style.transform = `rotate(${winddirection}deg)`;
-      svg.style.transformOrigin = '50% 70%';
-    });
+        svg.style.transform = `rotate(${winddirection}deg)`;
+      })
+      .catch(error => {
+        console.error('Error fetching arrow image: ', error);
+      });
+  }
 
   return;
 }
